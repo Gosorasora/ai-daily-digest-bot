@@ -1,4 +1,4 @@
-# 📬 AI Daily Digest Bot
+# 📬 Serverless AI Insight Bot 만들기
 
 매일 아침 9시에 AI가 정리한 뉴스 다이제스트가 본인 이메일로 도착하는 AWS 서버리스 봇.
 
