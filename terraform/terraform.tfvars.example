@@ -1,0 +1,17 @@
+# Copy this file to terraform.tfvars and fill in.
+#   cp terraform.tfvars.example terraform.tfvars
+
+aws_region   = "ap-northeast-2"
+project_name = "sbg-ai-digest"
+
+# Get free API key: https://aistudio.google.com/apikey
+gemini_api_key = "AIzaSy...REPLACE_ME"
+
+# Daily at 09:00 KST (= 00:00 UTC)
+schedule_expression = "cron(0 0 * * ? *)"
+
+default_prompt = "오늘의 AI/클라우드 분야 주요 뉴스 3개를 한국어로 한 줄씩 요약해줘. 각 항목 앞에 이모지 하나씩 붙여줘."
+email_subject  = "🤖 오늘의 AI 다이제스트"
+
+# gemini-2.0-flash often returns 429 with limit:0 on new keys; 2.5-flash works on free tier.
+gemini_model = "gemini-2.5-flash"

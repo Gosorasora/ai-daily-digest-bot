@@ -1,0 +1,7 @@
+terraform.tfvars
+*.tfstate
+*.tfstate.*
+.terraform/
+lambda/build/
+lambda/package.zip
+# NOTE: .terraform.lock.hcl is intentionally committed for reproducible provider versions.
