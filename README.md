@@ -69,8 +69,8 @@ AWS_PROFILE=my-bot aws sts get-caller-identity   # 본인 계정 ID/ARN 출력
 
 ### 1. 저장소 받기
 ```bash
-git clone <이 저장소 URL>
-cd aws-sbg-session
+git clone https://github.com/Gosorasora/ai-daily-digest-bot.git
+cd ai-daily-digest-bot
 ```
 
 ### 2. Gemini API 키 발급
@@ -228,7 +228,7 @@ AWS_PROFILE=my-bot terraform destroy
 ## 폴더 구조
 
 ```
-aws-sbg-session/
+ai-daily-digest-bot/
 ├── README.md                  ← 이 파일
 └── terraform/                 ← 인프라
     ├── main.tf                ← SNS, Lambda, EventBridge, IAM
