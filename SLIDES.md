@@ -30,28 +30,57 @@ Lambda + EventBridge + SNS + Gemini로 만드는 1시간 자동화
 
 # 🏗 아키텍처
 
-```
-┌──────────────┐
-│ EventBridge  │  매일 09:00 KST cron
-└──────┬───────┘
-       │ trigger
-       ▼
-┌──────────────┐    ┌────────────┐
-│ Lambda (Py)  │───▶│ Gemini API │   AI 콘텐츠 생성
-└──────┬───────┘    └────────────┘
-       │ publish
-       ▼
-┌──────────────┐
-│  SNS Topic   │───▶ 구독자 메일함
-└──────────────┘
-```
+![Architecture](docs/architecture.png)
 
 | 컴포넌트 | 비유 |
 |---|---|
 | EventBridge | ⏰ 알람시계 |
 | Lambda | 🐣 1초만 깨어나는 함수 |
-| Gemini | 🤖 AI 글짓기 |
+| Gemini API | 🤖 AI 글짓기 (외부 Google 서비스) |
 | SNS | 📢 방송국 (이메일 발송) |
+
+<details>
+<summary>🎨 eraser.io 코드 (다이어그램 재생성용)</summary>
+
+```
+title "AI Daily Digest Bot — Serverless Architecture"
+
+direction down
+
+// ── External: Google AI Studio ─────────────────────
+Gemini [icon: google-cloud, color: blue, label: "Google AI Studio\n(Gemini 2.5 Flash)\n— external service —"]
+
+// ── AWS Cloud — Seoul Region ───────────────────────
+AWS Cloud [icon: aws, color: orange, label: "AWS  ·  Region: ap-northeast-2 (Seoul)"] {
+  EventBridge [icon: aws-eventbridge, color: orange, label: "Amazon EventBridge\ncron(0 0 * * ? *)\n매일 09:00 KST"]
+  Lambda [icon: aws-lambda, color: orange, label: "AWS Lambda\nsbg-ai-digest\nPython 3.12 · 256MB"]
+  SNS [icon: aws-sns, color: red, label: "Amazon SNS Topic\nsbg-ai-digest"]
+  Logs [icon: aws-cloudwatch, color: pink, label: "Amazon CloudWatch Logs\n/aws/lambda/sbg-ai-digest\n(7일 보존)"]
+  IAM [icon: aws-iam, color: gray, label: "IAM Role\nsbg-ai-digest-lambda-role"]
+}
+
+// ── Subscribers (Email Inboxes) ─────────────────────
+Subscribers [icon: users, color: green, label: "구독자 이메일 (SNS subscriptions)"] {
+  UserA [icon: mail, label: "구독자 A"]
+  UserB [icon: mail, label: "구독자 B"]
+  UserN [icon: mail, label: "구독자 N..."]
+}
+
+// ── Flow ───────────────────────────────────────────
+EventBridge > Lambda: "1. invoke\n(cron trigger)"
+Lambda > Gemini: "2. HTTPS POST\nprompt"
+Gemini > Lambda: "3. AI 텍스트 응답"
+Lambda > SNS: "4. publish(Subject, Message)"
+Lambda > Logs: "logs (자동)"
+SNS > UserA: "5. SMTP email"
+SNS > UserB
+SNS > UserN
+IAM <> Lambda: "권한 부여"
+```
+
+**렌더링**: https://app.eraser.io/ → 새 Cloud Architecture Diagram → Code 탭에 붙여넣기 → PNG export → `docs/architecture.png`로 저장.
+
+</details>
 
 ---
 
@@ -76,15 +105,6 @@ Lambda + EventBridge + SNS + Gemini로 만드는 1시간 자동화
 ```bash
 git clone https://github.com/Gosorasora/ai-daily-digest-bot.git
 cd ai-daily-digest-bot
-```
-
-QR 코드:
-
-```
-█▀▀▀▀▀█ ▀▄▀█ █▀▀▀▀▀█
-█ ███ █ ▄▀▄  █ ███ █
-█ ▀▀▀ █ ▄▀▄█ █ ▀▀▀ █
-▀▀▀▀▀▀▀ █▄█▀ ▀▀▀▀▀▀▀
 ```
 
 (GitHub QR로 폰에서 클립보드 복사)
