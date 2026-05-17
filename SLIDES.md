@@ -48,19 +48,19 @@ title "AI Daily Digest Bot"
 typeface clean
 styleMode plain
 
-direction down
+direction right
 
-// External
+// External (Lambda 위/아래로 갈라져 나옴)
 Gemini [icon: google-cloud, color: blue, label: "Google AI Studio"]
 
-// AWS
+// AWS — 가로 흐름
 AWS Cloud [icon: aws, color: orange, label: "AWS  ·  ap-northeast-2 (Seoul)"] {
   EventBridge [icon: aws-eventbridge, color: orange, label: "Amazon EventBridge"]
   Lambda [icon: aws-lambda, color: orange, label: "AWS Lambda"]
   SNS [icon: aws-sns, color: red, label: "Amazon SNS"]
 }
 
-// Subscribers
+// Subscribers — 오른쪽
 Subscribers [icon: users, color: green, label: "구독자 이메일"] {
   UserA [icon: mail, label: "A"]
   UserB [icon: mail, label: "B"]
@@ -75,6 +75,8 @@ SNS > UserA: email
 SNS > UserB
 SNS > UserN
 ```
+
+**가로 배치**: `direction right`이 left→right 흐름을 만들어 PPT 16:9 슬라이드에 맞는 직사각형 형태(가로 길게)가 됩니다. 세로로 바꾸려면 `direction down`.
 
 **렌더링**: https://app.eraser.io/ → 새 Cloud Architecture Diagram → Code 탭에 붙여넣기 → PNG export → `docs/architecture.png`로 저장.
 
