@@ -20,26 +20,24 @@
 | 2 | IAM admin 사용자 + Access Key | 콘솔 → IAM → Users → Create user → AdministratorAccess 부착 → Security credentials → Create access key (CLI 용도) | 5분 | $0 |
 | 3 | AWS CLI 설치 + `aws configure` | 아래 설치 가이드 | 5분 | $0 |
 | 4 | Terraform 설치 (≥ 1.0) | 아래 설치 가이드 | 3분 | $0 |
-| 5 | Docker Desktop 설치 + 실행 | https://docker.com/products/docker-desktop | 5분 | $0 |
-| 6 | Gemini API 키 | https://aistudio.google.com/apikey → "Create API key" → `AIzaSy...` 복사 | 1분 | $0 |
-| 7 | 본인 이메일 주소 | 메일 받을 곳 (Gmail 권장) | — | — |
+| 5 | Gemini API 키 | https://aistudio.google.com/apikey → "Create API key" → `AIzaSy...` 복사 | 1분 | $0 |
+| 6 | 본인 이메일 주소 | 메일 받을 곳 (Gmail 권장) | — | — |
+
+🎉 Docker는 **필요 없습니다** — Lambda 코드가 Python 표준 라이브러리(urllib)만 쓰므로 외부 패키지 빌드가 없음.
 
 ### 로컬 도구 설치
 
 **macOS**:
 ```bash
 brew install terraform awscli
-# Docker Desktop은 .dmg로 별도 설치
 ```
 
 **Windows**:
 - Terraform: https://developer.hashicorp.com/terraform/install
 - AWS CLI: https://aws.amazon.com/cli/
-- Docker Desktop: https://docker.com/products/docker-desktop
 
 **Linux**:
 - Terraform: https://developer.hashicorp.com/terraform/install
-- Docker Engine: https://docs.docker.com/engine/install/
 - AWS CLI v2: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
 ### AWS 자격증명 설정
@@ -90,13 +88,11 @@ cp terraform.tfvars.example terraform.tfvars
 
 ### 4. Lambda 패키지 빌드
 
-Gemini SDK(`google-generativeai`)는 C 확장이 있어 Lambda 호환 환경에서 빌드해야 합니다. Docker가 그걸 해줍니다.
-
 ```bash
 ./build.sh
 ```
 
-빌드 결과는 `lambda/build/` 폴더 (39MB zip 예정).
+`handler.py`를 `lambda/build/`에 복사하는 한 줄짜리 작업. Lambda 코드가 Python 표준 라이브러리만 쓰므로 외부 패키지 설치 불필요. zip은 약 2KB.
 
 ### 5. 배포
 
@@ -189,9 +185,6 @@ from:no-reply@sns.amazonaws.com
 AWS_PROFILE=my-bot aws sns unsubscribe --subscription-arn <PendingConfirmation>
 # 다시 subscribe
 ```
-
-### `entrypoint requires the handler name as the first argument`
-Docker 빌드 시 Lambda 이미지 entrypoint 충돌. `build.sh`에 `--entrypoint /bin/sh`가 포함됐는지 확인.
 
 ### `User is not authorized to perform: iam:CreateRole`
 IAM 사용자에 관리자 권한 없음. AWS Console → IAM → Users → 본인 → AdministratorAccess 정책 부착 (또는 보다 좁게 `AmazonSNSFullAccess`, `IAMFullAccess`, `AWSLambda_FullAccess`, `AmazonEventBridgeFullAccess`, `CloudWatchLogsFullAccess` 묶음).
