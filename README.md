@@ -168,39 +168,6 @@ email_subject  = "💫 오늘의 한 줄"
 
 ---
 
-## 🚨 Troubleshooting
-
-### `429 Quota exceeded ... limit: 0, model: gemini-2.0-flash`
-신규 API 키에서 `gemini-2.0-flash`의 무료 quota가 0으로 잡히는 경우가 있습니다.
-**해결**: `terraform.tfvars`의 `gemini_model`을 `gemini-2.5-flash`로 변경 후 `terraform apply`.
-이미 기본값이 `gemini-2.5-flash`라 보통 발생 안 함.
-
-### `Pending Confirmation` 상태에서 메일 안 옴
-SNS는 토픽마다 별도 확인이 필요합니다. Gmail 프로모션/스팸 폴더 확인. 검색창에:
-```
-from:no-reply@sns.amazonaws.com
-```
-여전히 없으면 구독 삭제 후 재구독:
-```bash
-AWS_PROFILE=my-bot aws sns unsubscribe --subscription-arn <PendingConfirmation>
-# 다시 subscribe
-```
-
-### `User is not authorized to perform: iam:CreateRole`
-IAM 사용자에 관리자 권한 없음. AWS Console → IAM → Users → 본인 → AdministratorAccess 정책 부착 (또는 보다 좁게 `AmazonSNSFullAccess`, `IAMFullAccess`, `AWSLambda_FullAccess`, `AmazonEventBridgeFullAccess`, `CloudWatchLogsFullAccess` 묶음).
-
-### `This configuration does not support Terraform version 1.x.x`
-Terraform 1.0+ 필요. `brew upgrade terraform`.
-
-### Lambda 호출 후 메일 안 옴
-1. `aws sns list-subscriptions-by-topic --topic-arn <arn>` 로 `SubscriptionArn`이 `arn:aws:...`로 시작하는지 확인 (`PendingConfirmation`이면 안 옴)
-2. CloudWatch 로그 확인:
-   ```bash
-   AWS_PROFILE=my-bot aws logs tail /aws/lambda/sbg-ai-digest --follow
-   ```
-
----
-
 ## 비용 자세히
 
 | 사용량 | 월 비용 |
