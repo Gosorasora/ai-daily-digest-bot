@@ -43,42 +43,42 @@ Lambda + EventBridge + SNS + Gemini로 만드는 1시간 자동화
 <summary>🎨 eraser.io 코드 (다이어그램 재생성용)</summary>
 
 ```
-title "AI Daily Digest Bot — Serverless Architecture"
+title "AI Daily Digest Bot"
+
+typeface clean
+styleMode plain
 
 direction down
 
-// ── External: Google AI Studio ─────────────────────
-Gemini [icon: google-cloud, color: blue, label: "Google AI Studio\n(Gemini 2.5 Flash)\n— external service —"]
+// External
+Gemini [icon: google-cloud, color: blue, label: "Google AI Studio"]
 
-// ── AWS Cloud — Seoul Region ───────────────────────
-AWS Cloud [icon: aws, color: orange, label: "AWS  ·  Region: ap-northeast-2 (Seoul)"] {
-  EventBridge [icon: aws-eventbridge, color: orange, label: "Amazon EventBridge\ncron(0 0 * * ? *)\n매일 09:00 KST"]
-  Lambda [icon: aws-lambda, color: orange, label: "AWS Lambda\nsbg-ai-digest\nPython 3.12 · 256MB"]
-  SNS [icon: aws-sns, color: red, label: "Amazon SNS Topic\nsbg-ai-digest"]
-  Logs [icon: aws-cloudwatch, color: pink, label: "Amazon CloudWatch Logs\n/aws/lambda/sbg-ai-digest\n(7일 보존)"]
-  IAM [icon: aws-iam, color: gray, label: "IAM Role\nsbg-ai-digest-lambda-role"]
+// AWS
+AWS Cloud [icon: aws, color: orange, label: "AWS  ·  ap-northeast-2 (Seoul)"] {
+  EventBridge [icon: aws-eventbridge, color: orange, label: "Amazon EventBridge"]
+  Lambda [icon: aws-lambda, color: orange, label: "AWS Lambda"]
+  SNS [icon: aws-sns, color: red, label: "Amazon SNS"]
 }
 
-// ── Subscribers (Email Inboxes) ─────────────────────
-Subscribers [icon: users, color: green, label: "구독자 이메일 (SNS subscriptions)"] {
-  UserA [icon: mail, label: "구독자 A"]
-  UserB [icon: mail, label: "구독자 B"]
-  UserN [icon: mail, label: "구독자 N..."]
+// Subscribers
+Subscribers [icon: users, color: green, label: "구독자 이메일"] {
+  UserA [icon: mail, label: "A"]
+  UserB [icon: mail, label: "B"]
+  UserN [icon: mail, label: "..."]
 }
 
-// ── Flow ───────────────────────────────────────────
-EventBridge > Lambda: "1. invoke\n(cron trigger)"
-Lambda > Gemini: "2. HTTPS POST\nprompt"
-Gemini > Lambda: "3. AI 텍스트 응답"
-Lambda > SNS: "4. publish(Subject, Message)"
-Lambda > Logs: "logs (자동)"
-SNS > UserA: "5. SMTP email"
+// Flow
+EventBridge > Lambda: trigger
+Lambda <> Gemini: prompt / response
+Lambda > SNS: publish
+SNS > UserA: email
 SNS > UserB
 SNS > UserN
-IAM <> Lambda: "권한 부여"
 ```
 
 **렌더링**: https://app.eraser.io/ → 새 Cloud Architecture Diagram → Code 탭에 붙여넣기 → PNG export → `docs/architecture.png`로 저장.
+
+**폰트/테마 변경**: 우상단 ⚙️ → Typography 또는 코드 상단 `typeface clean | mono | handwriting`, `styleMode plain | shadow | watercolor` 수정.
 
 </details>
 
